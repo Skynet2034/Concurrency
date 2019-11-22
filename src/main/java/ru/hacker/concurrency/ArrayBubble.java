@@ -14,6 +14,10 @@ public class ArrayBubble {
         elems++;                    //размер массива увеличивается
     }
 
+    public int getMin() {
+        return (int) a[0];//здесь минимальный элемент массива
+    }
+
     public void printer() {          //метод вывода массива в консоль
         for (int i = 0; i < elems; i++) {    //для каждого элемента в массиве
             System.out.print(a[i] + " ");   //вывести в консоль
