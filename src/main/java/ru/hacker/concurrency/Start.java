@@ -11,7 +11,7 @@ public class Start {
 
         System.out.println(String.format("Число процессоров %d", numberProcessor));
 
-        int max = 100_000;
+        int max = 300_000;
 
         int count = numberProcessor;
 
@@ -27,14 +27,19 @@ public class Start {
         //доступно в вашей системе, см. numberProcessor. Исходя из него в массиве создайте numberProcessor потоков,
         //и запустите их.
         //В отдельном цикле делайте join на каждый поток!!!
-        Thread thread = new Thread(arrayBubbles[0]::bubbleSorter);
-        Thread thread2 = new Thread(arrayBubbles[1]::bubbleSorter);
-
         long currentTime = System.currentTimeMillis();
-        thread.start();
-        thread2.start();
-        thread.join();
-        thread2.join();
+        Thread[] threads=new Thread[numberProcessor];
+        for (int i=0; i<threads.length;i++)
+        {
+            threads[i] = new Thread(arrayBubbles[i]::bubbleSorter);
+            threads[i].start();
+        }
+
+        for (int i=0; i<threads.length;i++)
+        {
+          threads[i].join();
+        }
+
         System.out.println(String.format("Время работы %d", System.currentTimeMillis() - currentTime));
 
         ArrayBubble arrayBubble = new ArrayBubble(count);
@@ -48,6 +53,6 @@ public class Start {
         System.out.println("Минимум:");
         System.out.println(arrayBubble.getMin());
 
-        //array.printer();
+
     }
 }
