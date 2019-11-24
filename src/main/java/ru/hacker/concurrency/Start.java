@@ -1,5 +1,7 @@
 package ru.hacker.concurrency;
 
+import ru.hacker.concurrency.interrupt.TestThread;
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -9,6 +11,22 @@ public class Start {
 
     public static void main(String[] args) throws InterruptedException {
 
+        TestIncrement testIncrement = new TestIncrement();
+
+        for (int i = 0; i < 6; i++) {
+            System.out.println("Вывод " + i);
+            Thread t = new Thread(() -> {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(testIncrement.getValue());
+            });
+            t.start();
+        }
+
+/*
         System.out.println(String.format("Число процессоров %d", numberProcessor));
 
         int max = 1_000_000;
@@ -49,7 +67,7 @@ public class Start {
 
         arrayBubble.printer();
         System.out.print("Минимум:");
-        System.out.println(arrayBubble.getMin());
+        System.out.println(arrayBubble.getMin());*/
 
         //array.printer();
     }

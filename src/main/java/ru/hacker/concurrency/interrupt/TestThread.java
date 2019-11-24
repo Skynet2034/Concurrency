@@ -2,9 +2,15 @@ package ru.hacker.concurrency.interrupt;
 
 public class TestThread implements Runnable {
 
+    private volatile boolean isRun = true;
+
+    public void setStop() {
+        isRun = false;
+    }
+
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (Thread.currentThread().isInterrupted()) {
             System.out.println("Start");
             try {
                 Thread.sleep(1000);
@@ -13,5 +19,6 @@ public class TestThread implements Runnable {
                 System.err.println(String.format("Было вызвано прерывание: %s", e.getMessage()));
             }
         }
+        System.out.println("Stop");
     }
 }
