@@ -3,39 +3,40 @@ package ru.hacker.concurrency.wait;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Store<T> {
+public class Store {
 
-    private final Queue<T> queue = new LinkedList<>();
-
+    private int balance;
     private final int max;
+    private final int min;
 
-    private int counter = 0;
 
-    public Store(int max) {
+    public Store(int min, int max) {
+        this.min= min;
         this.max = max;
+        this.balance=min;
     }
 
-    public synchronized void add(T element) throws InterruptedException {
+    public synchronized void add(int amount) throws InterruptedException {
         try {
-            while (counter >= max) {
+            while (balance+amount>max) {
                 wait();
             }
-            counter++;
-            queue.add(element);
-            System.out.println(String.format("Add %s", element));
+            balance+=amount;
+            System.out.println("Placed to deposit "+ amount);
+            System.out.println("Current balance "+balance);
         } finally {
             notifyAll();
         }
     }
 
-    public synchronized T poll() throws InterruptedException {
+    public synchronized void withdraw(int amount) throws InterruptedException {
         try {
-            while (counter <= 0) {
+            while (balance-amount<min) {
                 wait();
             }
-            counter--;
-            System.out.print("Poll ");
-            return queue.poll();
+            balance-=amount;
+            System.out.println("Withdrawed from deposit "+ amount);
+            System.out.println("Current balance "+balance);
         } finally {
             notifyAll();
         }

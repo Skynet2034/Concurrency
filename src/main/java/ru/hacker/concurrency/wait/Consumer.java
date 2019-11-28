@@ -1,10 +1,13 @@
 package ru.hacker.concurrency.wait;
 
+import java.util.Random;
+
 public class Consumer implements Runnable {
 
-    private final Store<String> store;
+    private final Store store;
+    private Random rand=new Random();
 
-    public Consumer(Store<String> store) {
+    public Consumer(Store store) {
         this.store = store;
     }
 
@@ -12,10 +15,13 @@ public class Consumer implements Runnable {
     public void run() {
         for (int i = 0; i < 15 && !Thread.currentThread().isInterrupted(); i++) {
             try {
-                System.out.println(store.poll());
+                store.withdraw(rand.nextInt(3000));
+                System.out.println("Withdrawal operation "+i);
+                Thread.currentThread().sleep(40);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
     }
 }
+
