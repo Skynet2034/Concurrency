@@ -1,5 +1,7 @@
 package ru.hacker.concurrency;
 
+import ru.hacker.concurrency.interrupt.TestThread;
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -9,40 +11,54 @@ public class Start {
 
     public static void main(String[] args) throws InterruptedException {
 
+        TestIncrement testIncrement = new TestIncrement();
+
+        for (int i = 0; i < 6; i++) {
+            System.out.println("Вывод " + i);
+            Thread t = new Thread(() -> {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(testIncrement.getValue());
+            });
+            t.start();
+        }
+
+/*
         System.out.println(String.format("Число процессоров %d", numberProcessor));
 
-        int max = 300_000;
+        int max = 1_000_000;
 
         int count = numberProcessor;
 
         ArrayBubble[] arrayBubbles = new ArrayBubble[count];
         for (int i = 0; i < count; i++) {
-            arrayBubbles[i] = new ArrayBubble(max / count);
+            arrayBubbles[i] = new ArrayBubble(max / count, String.format("Побочный поток %s", i));
             IntStream.generate(() -> ThreadLocalRandom.current().nextInt(max))
                     .limit(max / count)
                     .forEach(arrayBubbles[i]::into);
         }
 
-        //Дописать логику таким образом, чтобы у вас создавалось столько потоков, сколько
-        //доступно в вашей системе, см. numberProcessor. Исходя из него в массиве создайте numberProcessor потоков,
-        //и запустите их.
-        //В отдельном цикле делайте join на каждый поток!!!
+        System.out.println("Запустили задачу");
         long currentTime = System.currentTimeMillis();
-        Thread[] threads=new Thread[numberProcessor];
-        for (int i=0; i<threads.length;i++)
-        {
+
+        Thread[] threads = new Thread[count];
+        for (int i = 0; i < count; i++) {
             threads[i] = new Thread(arrayBubbles[i]::bubbleSorter);
             threads[i].start();
         }
 
-        for (int i=0; i<threads.length;i++)
-        {
-          threads[i].join();
+        for (int i = 0; i < count; i++) {
+            if (threads[i].isAlive()) {
+                threads[i].join();
+            }
         }
 
         System.out.println(String.format("Время работы %d", System.currentTimeMillis() - currentTime));
 
-        ArrayBubble arrayBubble = new ArrayBubble(count);
+        ArrayBubble arrayBubble = new ArrayBubble(count, Thread.currentThread().getName());
         for (int i = 0; i < count; i++) {
             arrayBubble.into(arrayBubbles[i].getMin());
         }
@@ -50,9 +66,9 @@ public class Start {
         arrayBubble.bubbleSorter();
 
         arrayBubble.printer();
-        System.out.println("Минимум:");
-        System.out.println(arrayBubble.getMin());
+        System.out.print("Минимум:");
+        System.out.println(arrayBubble.getMin());*/
 
-
+        //array.printer();
     }
 }

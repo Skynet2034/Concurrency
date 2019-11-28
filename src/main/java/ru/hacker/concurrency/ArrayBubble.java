@@ -4,9 +4,12 @@ public class ArrayBubble {
     private long[] a;   //ссылка на массив
     private int elems;  //количество элементов в массиве
 
-    public ArrayBubble(int max) {    //конструктор класса
+    private final String nameThread;
+
+    public ArrayBubble(int max, String name) {    //конструктор класса
         a = new long[max];          //создание массива размером max
         elems = 0;                  //при создании массив содержит 0 элементов
+        nameThread = name;
     }
 
     public void into(long value) {   //метод вставки элемента в массив
@@ -33,6 +36,8 @@ public class ArrayBubble {
     }
 
     public void bubbleSorter() {     //МЕТОД ПУЗЫРЬКОВОЙ СОРТИРОВКИ
+        Thread.currentThread().setName(String.format("%s - %s", Thread.currentThread().getName(), nameThread));
+        System.out.println(String.format("Запустили задачу в потоке %s", Thread.currentThread().getName()));
         for (int out = elems - 1; out >= 1; out--) {  //Внешний цикл
             for (int in = 0; in < out; in++) {       //Внутренний цикл
                 if (a[in] > a[in + 1])               //Если порядок элементов нарушен
